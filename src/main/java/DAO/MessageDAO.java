@@ -56,7 +56,7 @@ public class MessageDAO {
         return messages;
     }
 
-    public Message getMessageById(int message_id){
+    public Message getMessageById(int message_id) {
         Connection connection = ConnectionUtil.getConnection();
         
         try{

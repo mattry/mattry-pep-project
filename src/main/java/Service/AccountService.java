@@ -7,7 +7,6 @@ public class AccountService {
     AccountDAO accountDAO;
 
     // start constructors
-
     public AccountService(){
         accountDAO = new AccountDAO();
     }
@@ -15,22 +14,21 @@ public class AccountService {
     public AccountService(AccountDAO accountDAO){
         this.accountDAO = accountDAO;
     }
-    
     // end constructors 
 
-    // register new account
-    // username cannot be blank
-    // password must be > 4 chars
-    // username cannot be taken
-
+    /* register new account
+    *  username cannot be blank
+    *  password must be > 4 chars
+    *  username cannot be taken
+    */
     public Account registerAccount(String username, String password) {
-        // check if username is blank
-        if (username == null) {
+        // check if username is blank or null
+        if (username == null || username.isBlank()) {
             return null;
         }
 
-        // check if password is null or too short
-        if (password == null || password.length() < 4) {
+        // check if password is blank, null or too short
+        if (password == null || password.isBlank() || password.length() < 4) {
             return null;
         }
 
@@ -40,7 +38,7 @@ public class AccountService {
             return null;
         }
 
-        // create new account and inster into database
+        // create new account and insert into database
         Account newAccount = new Account(username, password);
 
         return accountDAO.insertAccount(newAccount);
@@ -48,20 +46,18 @@ public class AccountService {
 
     // authenticate credentials
     // username and password must match a real account in the database
-
     public Account login(String username, String password) {
-        // check if username is blank
-        if (username == null) {
+        // check if username is blank or null
+        if (username == null || username.isBlank()) {
             return null;
         }
 
-        // check if password is null or too short
-        if (password == null || password.length() < 4) {
+        // check if password is blank, null or too short
+        if (password == null || password.isBlank() || password.length() < 4) {
             return null;
         }
 
         return accountDAO.getAccountByUsernameAndPassword(username, password);
-
     }
 
 
