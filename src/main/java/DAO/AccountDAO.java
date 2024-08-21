@@ -13,12 +13,12 @@ public class AccountDAO {
         Connection connection = ConnectionUtil.getConnection();
 
         try {
-            String sql = "INSERT INTO account (account_id, username, password) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             PreparedStatement ps = connection.prepareStatement(sql);
 
-            ps.setInt(1, account.getAccount_id());
-            ps.setString(2, account.getUsername());
-            ps.setString(3, account.getPassword());
+            //ps.setInt(1, account.getAccount_id());
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
             
             ps.executeUpdate();
 
