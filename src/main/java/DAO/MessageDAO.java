@@ -13,13 +13,12 @@ public class MessageDAO {
         Connection connection = ConnectionUtil.getConnection();
 
         try {
-            String sql = "INSERT INTO message (message_id, posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(sql);
 
-            ps.setInt(1, message.getMessage_id());
-            ps.setInt(2, message.getPosted_by());
-            ps.setString(3, message.getMessage_text());
-            ps.setLong(4, message.getTime_posted_epoch());
+            ps.setInt(1, message.getPosted_by());
+            ps.setString(2, message.getMessage_text());
+            ps.setLong(3, message.getTime_posted_epoch());
             
             ps.executeUpdate();
 

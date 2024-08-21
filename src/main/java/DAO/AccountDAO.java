@@ -71,10 +71,10 @@ public class AccountDAO {
                 return account;
             }
 
-        }catch(SQLException e){
+        } catch(SQLException e){
             System.out.println(e.getMessage());
         }
-
+ 
         return null;
     }
 
