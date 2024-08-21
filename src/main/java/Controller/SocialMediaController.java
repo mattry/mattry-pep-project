@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,8 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{id}", this::getMessageByIdHandler);
         app.delete("/messages/{id}", this::deleteMessageHandler);
+        app.patch("/messages/{id}", this::updateMessageHandler);
+        app.get("accounts/{id}/messages", this::getMessagesByPosterHandler);
         return app;
     }
 
@@ -95,8 +98,9 @@ public class SocialMediaController {
 
         if (message != null) {
             ctx.json(message);
+        } else {
+            ctx.status(200).result("");
         }
-        ctx.status(200).result("");
     }
 
     // Our API should be able to delete a message identified by a message ID.
@@ -109,8 +113,41 @@ public class SocialMediaController {
         if (message != null) {
             ctx.json(message);
             messageService.deleteMessageById(message_id);
+        } else {
+            ctx.status(200).result("");
         }
-        ctx.status(200).result("");
+    }
+
+    // Our API should be able to update a message text identified by a message ID.
+    private void updateMessageHandler(Context ctx) {
+        String id_string = ctx.pathParam("id");
+
+        String new_text = ctx.bodyAsClass(Map.class).get("message_text").toString();
+        System.out.println(new_text);
+
+        if (new_text == null || new_text.isBlank() || new_text.length() > 255) {
+            ctx.status(400);
+            return;
+        }
+    
+        Integer message_id = Integer.parseInt(id_string);
+        Message message = messageService.getMessageById(message_id);
+
+        if (message != null) {
+            message.setMessage_text(new_text);
+           messageService.updateMessageText(message_id, new_text);
+           ctx.json(message);
+        } else {
+            ctx.status(400);
+        }
+
+    }
+
+    // Our API should be able to retrieve all messages written by a particular user.
+    private void getMessagesByPosterHandler(Context ctx) {
+        String id_string = ctx.pathParam("id");
+        Integer message_id = Integer.parseInt(id_string);
+        ctx.json(messageService.getMessagesByPoster(message_id));
     }
 
 
