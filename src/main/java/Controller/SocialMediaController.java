@@ -148,7 +148,7 @@ public class SocialMediaController {
         String id_string = ctx.pathParam("id");
         Integer message_id = Integer.parseInt(id_string);
         ctx.json(messageService.getMessagesByPoster(message_id));
-    }
+    } 
 
 
 }
