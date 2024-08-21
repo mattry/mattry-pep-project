@@ -29,8 +29,10 @@ public class SocialMediaController {
         app.get("/example-endpoint", this::exampleHandler);
         app.post("/register", this::accountRegistrationHandler);
         app.post("/login", this::loginHandler);
-
+        app.post("/messages", this::createMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages/{id}", this::getMessageByIdHandler);
+        app.delete("/messages/{id}", this::deleteMessageHandler);
         return app;
     }
 
@@ -67,8 +69,48 @@ public class SocialMediaController {
         
     }
 
-    private void getAllMessagesHandler(Context ctx){
+    // Our API should be able to process the creation of new messages.
+    private void createMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message created = messageService.createMessage(message.getMessage_text(), message.getPosted_by(), message.getTime_posted_epoch());
+        if (created == null) {
+            ctx.status(400);
+        } else {
+            ctx.json(created);
+        }
+    }
+
+    // Our API should be able to retrieve all messages.
+    private void getAllMessagesHandler(Context ctx) {
         ctx.json(messageService.getAllMessages());
+    }
+
+    // Our API should be able to retrieve a message by its ID.
+    private void getMessageByIdHandler(Context ctx) {
+        String id_string = ctx.pathParam("id");
+
+        Integer message_id = Integer.parseInt(id_string);
+        Message message = messageService.getMessageById(message_id);
+
+        if (message != null) {
+            ctx.json(message);
+        }
+        ctx.status(200).result("");
+    }
+
+    // Our API should be able to delete a message identified by a message ID.
+    private void deleteMessageHandler(Context ctx) {
+        String id_string = ctx.pathParam("id");
+
+        Integer message_id = Integer.parseInt(id_string);
+        Message message = messageService.getMessageById(message_id);
+
+        if (message != null) {
+            ctx.json(message);
+            messageService.deleteMessageById(message_id);
+        }
+        ctx.status(200).result("");
     }
 
 
