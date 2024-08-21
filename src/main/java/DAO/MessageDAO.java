@@ -22,6 +22,11 @@ public class MessageDAO {
             
             ps.executeUpdate();
 
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                message.setMessage_id(rs.getInt(1));
+            }
+
             return message;
 
         }catch(SQLException e){

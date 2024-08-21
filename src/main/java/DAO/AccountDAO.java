@@ -22,6 +22,11 @@ public class AccountDAO {
             
             ps.executeUpdate();
 
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                account.setAccount_id(rs.getInt(1));
+            }
+
             return account;
 
         }catch(SQLException e){
